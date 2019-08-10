@@ -12,7 +12,7 @@
 ![leonardo](leonardo.jpg)
 
 
-![midi_wiring](midi_wiring.png)
+![wiring](wiring.jpg)
 
 
 [MIDI firmware](midi_firmware)
