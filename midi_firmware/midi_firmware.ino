@@ -2,7 +2,7 @@
 #include "MIDIUSB.h"
 
 #define NUM_BUTTONS  8
-#define MIDDLE_C = 53
+#define MIDDLE_C 53
 
 const uint8_t button1 = 2;
 const uint8_t button2 = 3;
@@ -22,18 +22,18 @@ uint8_t newCtlStates[4] = {200, 200, 200, 200};
 
 void controlChange(byte control, byte val) {
   Serial.print("\r\n controlChange val");
-  Serial.print(mod);
+  Serial.print(val);
   midiEventPacket_t mod_packet = {0x0B, 0xB0, control, val};
   MidiUSB.sendMIDI(mod_packet);
 }
 
-void noteOn(byte channel, byte pitch, byte velocity) {
-  midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
+void noteOn(byte note, byte velocity) {
+  midiEventPacket_t noteOn = {0x09, 0x90, note, velocity};
   MidiUSB.sendMIDI(noteOn);
 }
 
-void noteOff(byte channel, byte pitch, byte velocity) {
-  midiEventPacket_t noteOff = {0x08, 0x80 | channel, pitch, velocity};
+void noteOff(byte note, byte velocity) {
+  midiEventPacket_t noteOff = {0x08, 0x80, note, velocity};
   MidiUSB.sendMIDI(noteOff);
 }
 
@@ -54,8 +54,8 @@ void loop() {
   {
     newCtlStates[a] = analogRead(a + 1) >> 3; // read potentiometer and truncate to 7 bits
     if(ctlStates[a] != newCtlStates[a]) {
-      ctlStates[a] = newCtlStates[a]
-      modulate(a, ctlStates[a]);
+      ctlStates[a] = newCtlStates[a];
+      controlChange(a, ctlStates[a]);
       MidiUSB.flush();
       delay(5);
     }
@@ -69,14 +69,14 @@ void loop() {
       // If button pushed, turn LED on
       buttonStates[i] = LOW;
       Serial.print("\r\n button down");
-      noteOn(0, MIDDLE_C + i, 64);
+      noteOn(MIDDLE_C + i, 64);
       MidiUSB.flush();
       delay(5);
       
      } else if(newButtonStates[i] == HIGH && buttonStates[i] == LOW){
        buttonStates[i] = HIGH;
        Serial.print("\r\n button up");
-       noteOff(0, MIDDLE_C + i, 64);
+       noteOff(MIDDLE_C + i, 64);
        MidiUSB.flush();
        delay(5);
      }
