@@ -55,7 +55,7 @@ void loop() {
     newCtlStates[a] = analogRead(a + 1) >> 3; // read potentiometer and truncate to 7 bits
     if(ctlStates[a] != newCtlStates[a]) {
       ctlStates[a] = newCtlStates[a];
-      controlChange(a, ctlStates[a]);
+      controlChange(a + 1, ctlStates[a]);
       MidiUSB.flush();
       delay(5);
     }
