@@ -17,8 +17,8 @@ const uint8_t buttons[NUM_BUTTONS] = {button1, button2, button3, button4, button
 uint8_t buttonStates[NUM_BUTTONS] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 uint8_t newButtonStates[NUM_BUTTONS] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 
-uint8_t ctlStates[4] = {200, 200, 200, 200};
-uint8_t newCtlStates[4] = {200, 200, 200, 200};
+uint8_t ctlStates[4] = {200, 200};
+uint8_t newCtlStates[4] = {200, 200};
 
 void controlChange(byte control, byte val) {
   Serial.print("\r\n controlChange val");
@@ -50,16 +50,7 @@ void setup() {
 }
 
 void loop() {
-  for (int a = 0; a < 4; a++)
-  {
-    newCtlStates[a] = analogRead(a + 1) >> 3; // read potentiometer and truncate to 7 bits
-    if(ctlStates[a] != newCtlStates[a]) {
-      ctlStates[a] = newCtlStates[a];
-      controlChange(a + 1, ctlStates[a]);
-      MidiUSB.flush();
-      delay(5);
-    }
-  }
+
 
   for (int i = 0; i < NUM_BUTTONS; i++)
   {
@@ -82,4 +73,17 @@ void loop() {
      }
     
   }
+
+  for (int a = 0; a < 2; a++)
+  {
+    newCtlStates[a] = (analogRead(a + 1) >> 4) << 1; // read potentiometer and truncate to 7 bits and round a little
+    if(ctlStates[a] != newCtlStates[a]) {
+      ctlStates[a] = newCtlStates[a];
+      controlChange(a + 1, ctlStates[a]);
+      MidiUSB.flush();
+      delay(5);      
+    }
+  }
+
+  delay(5);
 }
