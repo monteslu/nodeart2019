@@ -21,8 +21,8 @@ navigator.requestMIDIAccess({ sysex: false })
   .then(function(access) {
 
      // Get lists of available MIDI controllers
-     const inputs = access.inputs.values();
-     //const outputs = access.outputs.values();
+     const inputs = Array.from(access.inputs.values());
+     //const outputs = Array.from(access.outputs.values());
 
      inputs[0].onmidimessage = function (message) {
         const data = message.data; // this gives us our [command/channel, note, velocity] data.
