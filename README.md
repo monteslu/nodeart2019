@@ -4,8 +4,6 @@
 
 Musical Instrument Digital Interface
 
-## MIDI controller
-
 * note on
 `[144,53,64]`
 
@@ -15,6 +13,8 @@ Musical Instrument Digital Interface
 * control change
 `[176,1,8]`
 
+
+## MIDI controller
 
 
 * Leonardo - Micrcontroller
